@@ -28,3 +28,4 @@ alias nn='cd /Users/tnhannn/Library/Mobile\ Documents/iCloud~md~obsidian/Documen
 alias nv='NVIM_APPNAME=nvim nvim'
 alias clock='tty-clock  -c -b -C 5 -D'
 export PATH=$PATH:/Users/tnhannn/.spicetify
+export DYLD_FALLBACK_LIBRARY_PATH="$(brew --prefix)/lib:$DYLD_FALLBACK_LIBRARY_PATH"

@@ -45,6 +45,7 @@ map("i", "<A-h>", "<Left>", {})
 map("i", "<A-j>", "<Down>", {})
 map("i", "<A-k>", "<Up>", {})
 map("i", "<A-l>", "<Right>", {})
+map("n", "<leader>t", ":colorscheme ")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({
@@ -82,9 +83,6 @@ require("lazy").setup({
 				remove_blankline_trail = true,
 			},
 		},
-		config = function(_, opts)
-			require("ibl").setup(opts)
-		end,
 	},
 	{
 		"akinsho/bufferline.nvim",
@@ -102,12 +100,92 @@ require("lazy").setup({
 		event = "InsertEnter",
 		config = true,
 	},
+	-- {
+	-- 	"hrsh7th/nvim-cmp",
+	-- 	event = "InsertEnter",
+	-- 	dependencies = {
+	-- 		-- Snippet engine (bắt buộc cho nvim-cmp)
+	-- 		"L3MON4D3/LuaSnip",
+	-- 		"saadparwaiz1/cmp_luasnip",
+	-- 		-- Friendly snippets
+	-- 		"rafamadriz/friendly-snippets",
+	-- 		-- Sources
+	-- 		"hrsh7th/cmp-nvim-lsp",
+	-- 		"hrsh7th/cmp-buffer",
+	-- 		"hrsh7th/cmp-path",
+	-- 	},
+	-- 	config = function()
+	-- 		local cmp = require("cmp")
+	-- 		local luasnip = require("luasnip")
+	--
+	-- 		-- Load snippets
+	-- 		require("luasnip.loaders.from_vscode").lazy_load()
+	--
+	-- 		cmp.setup({
+	-- 			snippet = {
+	-- 				expand = function(args)
+	-- 					luasnip.lsp_expand(args.body)
+	-- 				end,
+	-- 			},
+	-- 			mapping = cmp.mapping.preset.insert({
+	-- 				["<C-b>"] = cmp.mapping.scroll_docs(-4),
+	-- 				["<C-f>"] = cmp.mapping.scroll_docs(4),
+	-- 				["<C-Space>"] = cmp.mapping.complete(),
+	-- 				["<C-e>"] = cmp.mapping.abort(),
+	-- 				["<Tab>"] = cmp.mapping.confirm({ select = true }),
+	-- 				-- Tab/Shift-Tab navigation
+	-- 				["<C-n>"] = cmp.mapping(function(fallback)
+	-- 					if cmp.visible() then
+	-- 						cmp.select_next_item()
+	-- 					elseif luasnip.expand_or_jumpable() then
+	-- 						luasnip.expand_or_jump()
+	-- 					else
+	-- 						fallback()
+	-- 					end
+	-- 				end, { "i", "s" }),
+	-- 				["<C-p>"] = cmp.mapping(function(fallback)
+	-- 					if cmp.visible() then
+	-- 						cmp.select_prev_item()
+	-- 					elseif luasnip.jumpable(-1) then
+	-- 						luasnip.jump(-1)
+	-- 					else
+	-- 						fallback()
+	-- 					end
+	-- 				end, { "i", "s" }),
+	-- 			}),
+	-- 			sources = cmp.config.sources({
+	-- 				-- obsidian.nvim sẽ tự động thêm sources của nó vào đây
+	-- 				{ name = "nvim_lsp" },
+	-- 				{ name = "luasnip" },
+	-- 				{ name = "path" },
+	-- 			}, {
+	-- 				{ name = "buffer" },
+	-- 			}),
+	-- 			formatting = {
+	-- 				fields = { "abbr", "kind", "menu" },
+	-- 				format = function(entry, item)
+	-- 					local menu_icon = {
+	-- 						nvim_lsp = "[LSP]",
+	-- 						luasnip = "[Snip]",
+	-- 						buffer = "[Buf]",
+	-- 						path = "[Path]",
+	-- 						-- Obsidian sources sẽ tự thêm icon
+	-- 					}
+	-- 					item.menu = menu_icon[entry.source.name] or string.format("[%s]", entry.source.name)
+	-- 					return item
+	-- 				end,
+	-- 			},
+	-- 			window = {
+	-- 				completion = cmp.config.window.bordered(),
+	-- 				documentation = cmp.config.window.bordered(),
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 	{
 		"saghen/blink.cmp",
 		dependencies = { "rafamadriz/friendly-snippets" },
 		version = "1.*",
-		---@module 'blink.cmp'
-		---@type blink.cmp.Config
 		opts = {
 			keymap = { preset = "super-tab" },
 
@@ -116,7 +194,7 @@ require("lazy").setup({
 			},
 			completion = { documentation = { auto_show = false } },
 			sources = {
-				default = { "lsp", "path", "snippets", "buffer" },
+				default = { "obsidian", "obsidian_tags", "obsidian_new", "lsp", "path", "snippets", "buffer" },
 			},
 			fuzzy = { implementation = "prefer_rust" },
 		},
@@ -174,22 +252,23 @@ require("lazy").setup({
 	},
 	{
 		"obsidian-nvim/obsidian.nvim",
-		version = "*", -- use latest release, remove to use latest commit
+		version = "3.15.6",
 		lazy = false,
 		keys = {
-			{ "<leader>gf", "<cmd>Obsidian follow_link<CR>", {} },
+			{ "<leader>gf", "<cmd>Obsidian follow_link<CR>" },
 			{ "<leader>ch", "<cmd>Obsidian toggle_checkbox<CR>" },
 			{ "<leader>ot", "<cmd>Obsidian today<CR>" },
 			{ "<leader>od", "<cmd>Obsidian dailies<CR>" },
-			{ "<leader>on", "<cmd>Obsidian new_from_template<CR>" },
+			{ "<leader>on", "<cmd>Obsidian new<CR>" },
 			{ "<leader>ob", "<cmd>Obsidian backlinks<CR>" },
+			{ "<leader>or", "<cmd>Obsidian rename<CR>" },
 		},
 		opts = {
-			legacy_commands = false, -- this will be removed in the next major release
+			legacy_commands = false,
 			workspaces = {
 				{
 					name = "personal",
-					path = "/Users/tnhannn/Library/Mobile Documents/iCloud~md~obsidian/Documents/Note",
+					path = "/Users/tnhannn/Library/Mobile Documents/iCloud~md~obsidian/Documents/Note/",
 				},
 			},
 			ui = {
@@ -202,11 +281,14 @@ require("lazy").setup({
 				time_format = "%H:%M",
 			},
 			note_id_func = function(title)
-				if title == nil then
-					return tostring(os.time())
+				local zettel = require("obsidian.builtin").zettel_id()
+				if title ~= nil and title ~= "" then
+					return title
 				end
-				return title:gsub(" ", "-"):gsub("\\[\\^A-Za-z0-9-\\]", ""):lower()
+				return zettel
 			end,
+			notes_subdir = ".",
+			new_notes_location = ".",
 			daily_notes = {
 				folder = "daily",
 				date_format = "%Y-%m-%d",
@@ -217,6 +299,10 @@ require("lazy").setup({
 				enabled = true,
 				create_new = true,
 				order = { " ", "-", "x" },
+			},
+			completion = {
+				nvim_cmp = false,
+				blink = true,
 			},
 		},
 	},
@@ -245,6 +331,24 @@ require("lazy").setup({
 			},
 		},
 	},
+	-- {
+	-- 	"3rd/image.nvim",
+	-- 	build = false, -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
+	-- 	opts = {
+	-- 		processor = "magick_cli",
+	-- 		integrations = {
+	-- 			markdown = {
+	-- 				enabled = true,
+	-- 				clear_in_insert_mode = false,
+	-- 				download_remote_images = true,
+	-- 				only_render_image_at_cursor = true,
+	-- 				only_render_image_at_cursor_mode = "popup",
+	-- 				floating_windows = false,
+	-- 				filetypes = { "markdown" },
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 }, {
 	checker = {
 		enabled = true,
