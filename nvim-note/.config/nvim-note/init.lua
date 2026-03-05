@@ -230,7 +230,7 @@ require("lazy").setup({
 			})
 			require("telescope").load_extension("ui-select")
 			local builtin = require("telescope.builtin")
-			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+			-- vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
 			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
 			vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
 			vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
@@ -252,16 +252,18 @@ require("lazy").setup({
 	},
 	{
 		"obsidian-nvim/obsidian.nvim",
-		version = "3.15.6",
+		version = "3.15.10",
 		lazy = false,
 		keys = {
 			{ "<leader>gf", "<cmd>Obsidian follow_link<CR>" },
 			{ "<leader>ch", "<cmd>Obsidian toggle_checkbox<CR>" },
 			{ "<leader>ot", "<cmd>Obsidian today<CR>" },
 			{ "<leader>od", "<cmd>Obsidian dailies<CR>" },
-			{ "<leader>on", "<cmd>Obsidian new<CR>" },
+			{ "<leader>on", "<cmd>Obsidian new_from_template<CR>" },
 			{ "<leader>ob", "<cmd>Obsidian backlinks<CR>" },
 			{ "<leader>or", "<cmd>Obsidian rename<CR>" },
+			{ "<leader>ff", "<cmd>Obsidian quick_switch<CR>" },
+			{ "<leader>os", "<cmd>Obsidian tags<CR>" },
 		},
 		opts = {
 			legacy_commands = false,
@@ -281,14 +283,16 @@ require("lazy").setup({
 				time_format = "%H:%M",
 			},
 			note_id_func = function(title)
-				local zettel = require("obsidian.builtin").zettel_id()
 				if title ~= nil and title ~= "" then
 					return title
 				end
-				return zettel
+				return os.time()
 			end,
 			notes_subdir = ".",
 			new_notes_location = ".",
+			frontmatter = {
+				enabled = false,
+			},
 			daily_notes = {
 				folder = "daily",
 				date_format = "%Y-%m-%d",
@@ -297,7 +301,7 @@ require("lazy").setup({
 			},
 			checkbox = {
 				enabled = true,
-				create_new = true,
+				create_new = false,
 				order = { " ", "-", "x" },
 			},
 			completion = {
@@ -358,7 +362,7 @@ require("lazy").setup({
 		notify = false,
 	},
 })
-vim.cmd("colorscheme rose-pine-moon")
+vim.cmd("colorscheme catppuccin")
 require("task_organizer")
 require("autowrite")
 vim.keymap.set("n", "<leader>w", function()
