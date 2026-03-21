@@ -22,4 +22,4 @@ require("lazy").setup({ { import = "plugins" } }, {
 	},
 })
 require("lsp")
-vim.cmd("colorscheme rose-pine-moon")
+vim.cmd("colorscheme catppuccin")
