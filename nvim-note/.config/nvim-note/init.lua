@@ -46,6 +46,8 @@ map("i", "<A-j>", "<Down>", {})
 map("i", "<A-k>", "<Up>", {})
 map("i", "<A-l>", "<Right>", {})
 map("n", "<leader>t", ":colorscheme ")
+map("n", "j", "gj", {})
+map("n", "k", "gk", {})
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({
@@ -111,88 +113,6 @@ require("lazy").setup({
 		event = "InsertEnter",
 		config = true,
 	},
-	-- {
-	-- 	"hrsh7th/nvim-cmp",
-	-- 	event = "InsertEnter",
-	-- 	dependencies = {
-	-- 		-- Snippet engine (bắt buộc cho nvim-cmp)
-	-- 		"L3MON4D3/LuaSnip",
-	-- 		"saadparwaiz1/cmp_luasnip",
-	-- 		-- Friendly snippets
-	-- 		"rafamadriz/friendly-snippets",
-	-- 		-- Sources
-	-- 		"hrsh7th/cmp-nvim-lsp",
-	-- 		"hrsh7th/cmp-buffer",
-	-- 		"hrsh7th/cmp-path",
-	-- 	},
-	-- 	config = function()
-	-- 		local cmp = require("cmp")
-	-- 		local luasnip = require("luasnip")
-	--
-	-- 		-- Load snippets
-	-- 		require("luasnip.loaders.from_vscode").lazy_load()
-	--
-	-- 		cmp.setup({
-	-- 			snippet = {
-	-- 				expand = function(args)
-	-- 					luasnip.lsp_expand(args.body)
-	-- 				end,
-	-- 			},
-	-- 			mapping = cmp.mapping.preset.insert({
-	-- 				["<C-b>"] = cmp.mapping.scroll_docs(-4),
-	-- 				["<C-f>"] = cmp.mapping.scroll_docs(4),
-	-- 				["<C-Space>"] = cmp.mapping.complete(),
-	-- 				["<C-e>"] = cmp.mapping.abort(),
-	-- 				["<Tab>"] = cmp.mapping.confirm({ select = true }),
-	-- 				-- Tab/Shift-Tab navigation
-	-- 				["<C-n>"] = cmp.mapping(function(fallback)
-	-- 					if cmp.visible() then
-	-- 						cmp.select_next_item()
-	-- 					elseif luasnip.expand_or_jumpable() then
-	-- 						luasnip.expand_or_jump()
-	-- 					else
-	-- 						fallback()
-	-- 					end
-	-- 				end, { "i", "s" }),
-	-- 				["<C-p>"] = cmp.mapping(function(fallback)
-	-- 					if cmp.visible() then
-	-- 						cmp.select_prev_item()
-	-- 					elseif luasnip.jumpable(-1) then
-	-- 						luasnip.jump(-1)
-	-- 					else
-	-- 						fallback()
-	-- 					end
-	-- 				end, { "i", "s" }),
-	-- 			}),
-	-- 			sources = cmp.config.sources({
-	-- 				-- obsidian.nvim sẽ tự động thêm sources của nó vào đây
-	-- 				{ name = "nvim_lsp" },
-	-- 				{ name = "luasnip" },
-	-- 				{ name = "path" },
-	-- 			}, {
-	-- 				{ name = "buffer" },
-	-- 			}),
-	-- 			formatting = {
-	-- 				fields = { "abbr", "kind", "menu" },
-	-- 				format = function(entry, item)
-	-- 					local menu_icon = {
-	-- 						nvim_lsp = "[LSP]",
-	-- 						luasnip = "[Snip]",
-	-- 						buffer = "[Buf]",
-	-- 						path = "[Path]",
-	-- 						-- Obsidian sources sẽ tự thêm icon
-	-- 					}
-	-- 					item.menu = menu_icon[entry.source.name] or string.format("[%s]", entry.source.name)
-	-- 					return item
-	-- 				end,
-	-- 			},
-	-- 			window = {
-	-- 				completion = cmp.config.window.bordered(),
-	-- 				documentation = cmp.config.window.bordered(),
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- },
 	{
 		"saghen/blink.cmp",
 		dependencies = { "rafamadriz/friendly-snippets" },
@@ -241,7 +161,7 @@ require("lazy").setup({
 			})
 			require("telescope").load_extension("ui-select")
 			local builtin = require("telescope.builtin")
-			-- vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
 			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
 			vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
 			vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
@@ -273,7 +193,7 @@ require("lazy").setup({
 			{ "<leader>on", "<cmd>Obsidian new_from_template<CR>" },
 			{ "<leader>ob", "<cmd>Obsidian backlinks<CR>" },
 			{ "<leader>or", "<cmd>Obsidian rename<CR>" },
-			{ "<leader>ff", "<cmd>Obsidian quick_switch<CR>" },
+			-- { "<leader>ff", "<cmd>Obsidian quick_switch<CR>" },
 			{ "<leader>os", "<cmd>Obsidian tags<CR>" },
 		},
 		opts = {
@@ -319,6 +239,33 @@ require("lazy").setup({
 				nvim_cmp = false,
 				blink = true,
 			},
+		},
+	},
+	{
+		dir = "~/test/logseq-mode.nvim/",
+		main = "logseq_mode",
+		keys = {
+			{ "<leader>dl", "<cmd>LogseqDaily<CR>", { desc = "Open logseq daily page" } },
+		},
+		dependencies = {
+			{
+				"stevearc/conform.nvim",
+				opts = function(_, opts)
+					opts.formatters_by_ft = opts.formatters_by_ft or {}
+
+					-- Add logseq_fixer to markdown
+					-- It only runs if the file is inside the configured logseq_dir
+					if not opts.formatters_by_ft.markdown then
+						opts.formatters_by_ft.markdown = { "logseq_fixer" }
+					else
+						table.insert(opts.formatters_by_ft.markdown, "logseq_fixer")
+					end
+				end,
+			}, -- Optional, for formatting
+			"folke/snacks.nvim", -- Optional, for grep picker
+		},
+		opts = {
+			logseq_dir = "~/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/Note/", -- Path to your graph
 		},
 	},
 	{
