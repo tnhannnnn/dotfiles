@@ -22,4 +22,5 @@ require("lazy").setup({ { import = "plugins" } }, {
 	},
 })
 require("lsp")
-vim.cmd("colorscheme catppuccin")
+vim.cmd("colorscheme nord")
+vim.opt.cmdheight = 0

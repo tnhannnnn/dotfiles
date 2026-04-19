@@ -25,6 +25,7 @@ alias td="tmux detach"
 alias tl="tmux list-sessions"
 alias nn='NVIM_APPNAME=nvim-note nvim'
 alias nv='NVIM_APPNAME=nvim nvim'
+alias nm='NVIM_APPNAME=nvim-12 nvim'
 alias clock='tty-clock  -c -b -C 5 -D'
 export PATH=$PATH:/Users/tnhannn/.spicetify
 export DYLD_FALLBACK_LIBRARY_PATH="$(brew --prefix)/lib:$DYLD_FALLBACK_LIBRARY_PATH"

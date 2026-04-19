@@ -5,7 +5,8 @@ vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.softtabstop = 2
 vim.o.expandtab = true
-vim.o.smartindent = true
+vim.o.smartindent = false
+vim.o.autoindent = false
 vim.o.cursorline = true
 vim.o.mouse = "a"
 vim.o.confirm = true
@@ -15,7 +16,6 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.fillchars:append({ eob = " " })
-vim.opt.shortmess:append("I")
 vim.g.mapleader = " "
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
@@ -103,10 +103,7 @@ require("lazy").setup({
 		requires = "nvim-tree/nvim-web-devicons",
 		opts = {},
 	},
-	{
-		"karb94/neoscroll.nvim",
-		opts = {},
-	},
+	{ enabled = true, "karb94/neoscroll.nvim", opts = {} },
 
 	{
 		"windwp/nvim-autopairs",
@@ -242,6 +239,7 @@ require("lazy").setup({
 		},
 	},
 	{
+		-- "tnhannnnn/logseq-mode.nvim",
 		dir = "~/test/logseq-mode.nvim/",
 		main = "logseq_mode",
 		keys = {
@@ -338,11 +336,11 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 -- Insert **** and move cursor to the middle
-vim.keymap.set("i", "<C-b>", function()
-	return "****<Left><Left>"
-end, { expr = true, noremap = true })
-
--- Insert ** and move cursor to the middle
-vim.keymap.set("i", "<C-u>", function()
-	return "**<Left>"
-end, { expr = true, noremap = true })
+-- vim.keymap.set("i", "<C-b>", function()
+-- 	return "****<Left><Left>"
+-- end, { expr = true, noremap = true })
+--
+-- -- Insert ** and move cursor to the middle
+-- vim.keymap.set("i", "<C-u>", function()
+-- 	return "**<Left>"
+-- end, { expr = true, noremap = true })
